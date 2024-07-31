@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
-
 use Illuminate\Http\Request;
 
 class BrandsController extends Controller
@@ -22,7 +21,7 @@ class BrandsController extends Controller
      */
     public function create()
     {
-        return view(view: 'brands.create');
+        return view('brands.create');
     }
 
     /**
@@ -30,7 +29,7 @@ class BrandsController extends Controller
      */
     public function store(Request $request)
     {
-        //Validation
+        // Validation
         $validatedData = $request->validate([
             'name' => 'required|min:2|max:50|unique:brands'
         ]);
@@ -39,16 +38,16 @@ class BrandsController extends Controller
         $brand->name = $request->name;
         $brand->save();
 
-        flash(message: 'Brand created successfully')->success();
-        return back();
-}
+        flash('Brand created successfully')->success();
+        return redirect()->route('brands.index');
+    }
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        // Optional method for displaying a single brand if needed
     }
 
     /**
@@ -65,17 +64,17 @@ class BrandsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //Validation
+        // Validation
         $validatedData = $request->validate([
             'name' => 'required|min:2|max:50|unique:brands,name,' . $id
         ]);
-    
+
         $brand = Brand::findOrFail($id);
         $brand->name = $request->name;
         $brand->save();
-    
-        flash(message: 'Brand updated successfully')->info();
-        return redirect()->route(route: 'brands.index');
+
+        flash('Brand updated successfully')->info();
+        return redirect()->route('brands.index');
     }
 
     /**
@@ -86,7 +85,7 @@ class BrandsController extends Controller
         $brand = Brand::findOrFail($id);
         $brand->delete();
 
-        flash(message: 'Brand deleted successfully')->warning();
-        return redirect()->route(route: 'brands.index');
+        flash('Brand deleted successfully')->warning();
+        return redirect()->route('brands.index');
     }
 }

@@ -40,7 +40,7 @@ class SizesController extends Controller
         $size->save();
 
         flash(message: 'Size created successfully')->success();
-        return back();
+        return redirect()->route('sizes.index');
     }
 
     /**
