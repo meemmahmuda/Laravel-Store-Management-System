@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
+
 use Illuminate\Http\Request;
 
 class BrandsController extends Controller
@@ -20,7 +22,7 @@ class BrandsController extends Controller
      */
     public function create()
     {
-        //
+        return view(view: 'brands.create');
     }
 
     /**
@@ -28,8 +30,18 @@ class BrandsController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        //Validation
+        $validatedData = $request->validate([
+            'name' => 'required|min:2|max:50|unique:brands'
+        ]);
+
+        $brand = new Brand();
+        $brand->name = $request->name;
+        $brand->save();
+
+        flash(message: 'Brand created successfully')->success();
+        return back();
+}
 
     /**
      * Display the specified resource.
@@ -44,7 +56,8 @@ class BrandsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $brand = Brand::findOrFail($id);
+        return view('brands.edit', compact('brand'));
     }
 
     /**
@@ -52,7 +65,17 @@ class BrandsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //Validation
+        $validatedData = $request->validate([
+            'name' => 'required|min:2|max:50|unique:brands,name,' . $id
+        ]);
+    
+        $brand = Brand::findOrFail($id);
+        $brand->name = $request->name;
+        $brand->save();
+    
+        flash(message: 'Brand updated successfully')->info();
+        return redirect()->route(route: 'brands.index');
     }
 
     /**
@@ -60,6 +83,10 @@ class BrandsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $brand = Brand::findOrFail($id);
+        $brand->delete();
+
+        flash(message: 'Brand deleted successfully')->warning();
+        return redirect()->route(route: 'brands.index');
     }
 }
